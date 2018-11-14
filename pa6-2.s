@@ -1,6 +1,7 @@
 		@---------------------
 		@	Programming Assignment 6, Problem 2
 		@	Your required header information goes here
+		@   FRANK ELLIS, 11/14/18, PA6-2, DIVIDES NUMBERS.
 		@--------------------
 		@	You are to write a function that performs integer division
 		@	Your function must be called div.  It takes two values, a and b passed as parameters,
@@ -13,7 +14,7 @@
 		@	5
 	.extern printf
         .global main
-        .func main 		
+        .func main
 main:		@	DO NOT TOUCH!
 		PUSH	{LR}
 		MOV	R0, #5
@@ -47,14 +48,31 @@ main:		@	DO NOT TOUCH!
 		LDR	R0, =out
 		BL 	printf
 		POP	{PC}
-		
+
 		@---------------------
 		@	div function.  Your code goes here!
+
 		@---------------------
 div:		PUSH	{LR}	@ Leave this here
+        @ Your code here
+    MOV R4, R1              @put divisor in r4
+    CMP R4, R0, LSL #1      @doubles until 2x r4 > divisor
+    div1:
+        MOVLS R4, R4, LSL #1
+        CMP R4, R0, LSR #1
+        BLS div1
+        MOV R3, #0          @initialize the quotient
 
-		@ Your code here
-	
+    div2:
+        CMP R0, R4          @SUB R4?
+        SUBCS R0, R0, R4    @IF YES, THEN
+        ADC R3, R3, R3      @DOUBLE QUOTIENT ADD NEW BIT
+        MOV R4, R4, LSR #1  @HALF R4
+        CMP R4, R1          @LOOP UNTIL DONE
+        BHS div2
+
+		MOV R0, R3
+
 		POP	{PC} 	@ return statement
 .data
 out:	.asciz "%d\n"	@ String for printf
